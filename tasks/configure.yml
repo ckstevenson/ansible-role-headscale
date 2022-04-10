@@ -1,0 +1,8 @@
+---
+# tasks file for headscale configurations
+
+- name: Create the namespace
+  ansible.builtin.command: headscale namespaces create '{{ item }}'
+  register: output
+  changed_when: output.rc != 0
+  loop: '{{ headscale_namespaces }}'

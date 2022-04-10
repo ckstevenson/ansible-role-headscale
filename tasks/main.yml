@@ -1,0 +1,67 @@
+---
+# tasks file for headscale
+
+- name: Get headscale binary from GitHub
+  ansible.builtin.get_url:
+    url: 'https://github.com/juanfont/headscale/releases/download/v{{ headscale_version }}/headscale_{{ headscale_version }}_linux_amd64'
+    dest: '/usr/local/bin/headscale'
+    mode: '0755'
+
+- name: Create a headscale service user
+  ansible.builtin.user:
+    name: '{{ headscale_user }}'
+    system: yes
+    create_home: no
+    comment: 'headscale service account'
+
+- name: Create headscale's configuration and state directories
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: 'directory'
+    owner: '{{ headscale_user }}'
+    group: '{{ headscale_user }}'
+    mode: '0755'
+  loop:
+    - '/etc/headscale'
+    - '/var/lib/headscale'
+    - '/var/run/headscale'
+
+- name: Create headscale's SQLite database
+  ansible.builtin.file:
+    path: '/var/lib/headscale/db.sqlite'
+    state: touch
+    owner: '{{ headscale_user }}'
+    group: '{{ headscale_user }}'
+    mode: '0644'
+    modification_time: preserve
+    access_time: preserve
+
+- name: Copy headscale's configuration file
+  ansible.builtin.copy:
+    src: 'config.yaml'
+    dest: '/etc/headscale/'
+    owner: '{{ headscale_user }}'
+    group: '{{ headscale_user }}'
+    mode: '0644'
+
+- name: Copy headscale's systemd service
+  ansible.builtin.template:
+    src: 'headscale.service.j2'
+    dest: '/etc/systemd/system/headscale.service'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  notify: 
+    - Daemon reload
+    - Restart headscale
+
+- name: Enable the headscale service
+  ansible.builtin.service:
+    name: headscale.service
+    enabled: yes
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Include configuration tasks
+  include_tasks: configure.yml

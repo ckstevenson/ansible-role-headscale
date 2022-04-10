@@ -1,0 +1,25 @@
+[Unit]
+Description=headscale controller
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+User={{ headscale_user }}
+Group={{ headscale_user }}
+Environment=GIN_MODE=release
+ExecStart=/usr/local/bin/headscale serve
+Restart=always
+RestartSec=5
+
+# Optional security enhancements
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/headscale /var/run/headscale
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+RuntimeDirectory=headscale
+
+[Install]
+WantedBy=multi-user.target

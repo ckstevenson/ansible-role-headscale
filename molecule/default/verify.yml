@@ -1,0 +1,42 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    headscale_user: 'headscale'
+    headscale_namespace: 'default'
+  tasks:
+  - name: Register file stats
+    ansible.builtin.stat:
+      path: '{{ item }}'
+    register: stat_output
+    loop:
+      - '/etc/headscale'
+      - '/var/lib/headscale/db.sqlite'
+
+  - name: Verify stats
+    ansible.builtin.assert:
+      that:  
+        - item.stat.pw_name == '{{ headscale_user }}'
+        - item.stat.gr_name == '{{ headscale_user }}'
+    loop: '{{ stat_output.results }}'
+  
+  - name: Populate service facts
+    ansible.builtin.service_facts:
+
+  - name: Get information about services
+    ansible.builtin.assert:
+      that: ansible_facts.services['headscale.service'].status == 'enabled'
+
+  - name: Gather headscale namespaces
+    ansible.builtin.command: '/usr/local/bin/headscale namespaces list'
+    register: headscale_namespaces
+
+  - name: Debug
+    ansible.builtin.debug:
+      var: headscale_namespaces
+
+  - name: Verify that a headscale namespace was created
+    ansible.builtin.assert:
+      that: "'{{ headscale_namespace }}' in headscale_namespaces.stdout"

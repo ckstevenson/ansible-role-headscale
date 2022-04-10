@@ -1,0 +1,7 @@
+---
+# defaults file for headscale
+
+headscale_version: '0.15.0'
+headscale_namespaces: 
+  - 'default'
+headscale_user: 'headscale'
