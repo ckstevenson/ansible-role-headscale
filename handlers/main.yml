@@ -6,11 +6,6 @@
     name: 'headscale.service'
     state: restarted
 
-- name: Restart sshd
-  ansible.builtin.service:
-    name: 'sshd.service'
-    state: restarted
-
 - name: Daemon reload
   ansible.builtin.systemd:
     daemon_reload: yes
