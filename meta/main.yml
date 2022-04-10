@@ -1,5 +1,6 @@
 galaxy_info:
   author: Cameron Stevenson
+  role_name: headscale
   namespace: ckstevenson
   description: Install headscale server with Ansible
 
