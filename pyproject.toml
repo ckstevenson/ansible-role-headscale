@@ -3,6 +3,7 @@ name = "headscale"
 version = "0.1.0"
 description = "Headscale Ansible role"
 authors = ["Cameron Stevenson <cksteve@protonmail.com>"]
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.10"
