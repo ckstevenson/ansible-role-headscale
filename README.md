@@ -6,7 +6,7 @@ Install [headscale](https://github.com/juanfont/headscale), an open source and s
 Requirements
 ------------
 
-Everyting to install headscale is satisfied with the ansible.builtin collection. Ansible development dependencies are handled by [poetry](https://python-poetry.org/).
+Everyting to install headscale is satisfied with the ansible.builtin collection.
 
 Role Variables
 --------------
@@ -22,13 +22,13 @@ headscale_user: 'headscale'
 Dependencies
 ------------
 
-n/a
+No role dependencies.
 
 Dev Dependencies
 ------------
 
 * python-poetry
-* GNU Make
+* [just](https://github.com/casey/just)
 * Virtualbox (need to switch with KVM/QEMU)
 * Vagrant
 
