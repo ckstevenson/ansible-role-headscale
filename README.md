@@ -43,14 +43,9 @@ Example Playbook
   hosts: all
   become: true
   vars:
-    user: 'cameron'
-    headscale_namespaces:
-      - 'homelab'
+    headscale_user: 'headscale'
+    headscale_namespace: 'default'
   tasks:
-    - name: "Include ckstevenson.base"
-      include_role:
-        name: "ckstevenson.base"
-
     - name: "Include ckstevenson.headscale"
       include_role:
         name: "ckstevenson.headscale"
